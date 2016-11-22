@@ -27,8 +27,8 @@ public:
   
   
 private:
-  void addToDigit(int iIndex, int iV);
+  void addToDigit(int iIndex, __uint64_t iV);
   
   bool mPositive;
-  std::vector<char> mDigits;
+  std::vector<unsigned int> mData;
 };
