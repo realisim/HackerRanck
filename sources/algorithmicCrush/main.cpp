@@ -14,7 +14,7 @@ struct operation
 {
     int a;
     int b;
-    unsigned long long int k;
+    long long k;
 };
 
 int n = 0, m = 0;
@@ -22,13 +22,13 @@ vector<operation> operations;
 
 //--------------------------------------------
 
-#define READ_FROM_FILE 1
+#define READ_FROM_FILE 0
 void readInput()
 {
-#ifdef READ_FROM_FILE
+#if READ_FROM_FILE
     ifstream ifs;
     ifs.open("/Users/po/workGit/hackerRanck/sources/algorithmicCrush/testCases/input10.txt", ios::in);
-
+    
     ifs >> n >> m;
     
     for(int i = 0; i < m; ++i)
@@ -37,8 +37,8 @@ void readInput()
         ifs >> o.a >> o.b >> o.k;
         operations.push_back(o);
     }
-
-#elif
+    
+#else
     cin >> n >> m;
     
     for(int i = 0; i < m; ++i)
@@ -50,69 +50,44 @@ void readInput()
 #endif
 }
 
-void printOperationResult(const map<int, unsigned long long int>& iMap)
+void printOperationResult(const std::vector<long long>& iValues)
 {
-    for(auto it : iMap)
+    for(auto it : iValues)
     {
-        cout << it.first << " " << it.second << "\n";
+        cout << it << " ";
     }
     cout << "\n";
 }
 
-void insert(int i, map<int, unsigned long long int>& iMap)
-{
-    // increment all values in betwen
-    auto itI = iMap.find(i);
-    
-    if(itI == iMap.end())
-    {
-        iMap[i] = 0;
-        itI = iMap.find(i);
-        if(i > 0)
-        {
-            auto previousV = itI;
-            previousV--;
-            iMap[i] = previousV->second;
-        }
-        
-        if(i < n)
-        {
-            auto nextV = itI;
-            nextV++;
-            iMap[i+1] = nextV->second;
-        }
-    }
-}
 
 int main() {
     /* Enter your code here. Read input from STDIN. Print output to STDOUT */
     
     readInput();
     
-    unsigned long long int maxValue = 0;
-    map<int, unsigned long long int> values;
-    values[0] = 0;
-    values[n-1] = 0;
+    long long maxValue = 0;
+    vector<long long> impulsions;
+    impulsions.resize(n, 0);
     
     for(auto o : operations)
     {
         const int i = o.a - 1;
         const int j = o.b - 1;
         
-        insert(i, values);
-        insert(j, values);
-
-        auto itI = values.find(i);
-        auto itJ = values.find(j);
-        for(; itI != itJ; ++itI )
+        impulsions[i] += o.k;
+        if( (j+1) < n )
         {
-            itI->second += o.k;
-            maxValue = max(maxValue, itI->second);
+            impulsions[j+1] -= o.k;
         }
-        itI->second += o.k;
-        maxValue = max(maxValue, itI->second);
         
-        printOperationResult(values);
+        //printOperationResult(impulsions);
+    }
+    
+    long long x = 0;
+    for(auto i : impulsions)
+    {
+        x += i;
+        maxValue = std::max(maxValue, x);
     }
     
     cout << maxValue;
