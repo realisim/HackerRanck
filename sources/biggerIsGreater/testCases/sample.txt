@@ -1,0 +1,14 @@
+5
+ab
+bb
+hefg
+dhck
+dkhc
+
+
+results:
+ba
+no answer
+hegf
+dhkc
+hcdk
